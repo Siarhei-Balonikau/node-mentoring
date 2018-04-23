@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./app.js --exec babel-node",
-    "test": ""
+    "build": "babel src --out-dir dist --copy-files",
+    "prestart": "rimraf dist && npm run build",
+    "start": "node dist/app.js",
+    "watch": "nodemon --exec babel-node dist/app.js"
   },
   "repository": {
     "type": "git",
@@ -21,10 +23,12 @@
   },
   "homepage": "https://github.com/Siarhei-Balonikau/node-mentoring#readme",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
-    "nodemon": "^1.17.3"
+    "nodemon": "^1.17.3",
+    "rimraf": "^2.6.2"
   }
 }
