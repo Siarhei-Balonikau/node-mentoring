@@ -7,7 +7,7 @@
     "build": "babel src --out-dir dist --copy-files",
     "prestart": "rimraf dist && npm run build",
     "start": "node dist/app.js",
-    "watch": "nodemon --exec babel-node dist/app.js"
+    "watch": "nodemon --exec babel-node src/app.js"
   },
   "repository": {
     "type": "git",
