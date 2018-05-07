@@ -1,5 +1,8 @@
 import fs from 'fs';
 import AppEmitter from './../AppEmitter.js';
+import { promisify } from 'util';
+
+const getStatAsync = promisify(fs.stat);
 
 export default class DirWatcher {
   constructor() {
@@ -15,14 +18,14 @@ export default class DirWatcher {
 
     setInterval(() => {
       fs.readdir(path, (err, newFiles) => {
+        if (err) {
+          console.error('Readdir error: ', err);
+          return;
+        }
+
         let newStats = this.getStats(path, newFiles);
 
         newStats.then(currentStats => {
-          if (err) {
-            console.error('Readdir error: ', err);
-            return;
-          }
-
           let {deletedStats, addedStats} = this.checkFiles(previousStats, currentStats);
 
           currentStats.sort(this.compareIno);
@@ -30,21 +33,18 @@ export default class DirWatcher {
           if (deletedStats.length !== 0) {
             previousStats = this.deleteStats(deletedStats, previousStats);
 
-            //console.log('deleted');
             this.eventEmitter.emit('changed');
           }
 
           if (addedStats.length !== 0) {
             previousStats = this.addStats(addedStats, previousStats);
 
-            //console.log('added');
             this.eventEmitter.emit('changed');
           }
 
           if (this.isModifiedStats(previousStats, currentStats)) {
             previousStats = currentStats;
 
-            //console.log('changed');
             this.eventEmitter.emit('changed');
           }
         });
@@ -56,28 +56,17 @@ export default class DirWatcher {
     let stats = files.map(file => {
       let fullPath = path + file;
 
-      return this.getStat(fullPath);
+      return getStatAsync(fullPath);
     });
 
     return Promise.all(stats);
-  }
-
-  getStat (path) {
-    return new Promise((resolve, reject) => {
-      fs.stat(path, (err, stats) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve(stats);
-      });
-    });
   }
 
   compareIno (objectA, objectB) {
     return objectA.ino - objectB.ino;
   }
 
+  /* method for clearing array from empty slots */
   clean (array) {
     for (var i = 0; i < array.length; i++) {
       if (array[i] == undefined) {
@@ -125,9 +114,7 @@ export default class DirWatcher {
 
   deleteStats(deletedStats, previousStats) {
     return deletedStats.reduce((previousValue, delFile, index, array) => {
-      previousValue = previousValue.filter(file => delFile.ino !== file.ino);
-
-      return previousValue;
+      return previousValue.filter(file => delFile.ino !== file.ino);
     }, previousStats);
   }
 

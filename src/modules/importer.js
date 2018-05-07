@@ -1,4 +1,7 @@
 import fs from 'fs';
+import { promisify } from 'util';
+
+const readFileAsync = promisify(fs.readFile);
 
 export default class Importer {
   listen(eventEmitter, path, sync = false) {
@@ -46,31 +49,17 @@ export default class Importer {
     let content = files.map(file => {
       let fullPath = path + file;
 
-      return this.readFile(fullPath);
+      return readFileAsync(fullPath, 'utf-8');
     });
 
     return Promise.all(content);
   }
 
   readFilesSync(path, files) {
-    let content = files.map(file => {
+    return files.map(file => {
       let fullPath = path + file;
 
       return this.readFileSync(fullPath);
-    });
-
-    return content;
-  }
-
-  readFile(path) {
-    return new Promise((resolve, reject) => {
-      fs.readFile(path, 'utf8', (err, stats) => {
-        if (err) {
-          return reject(err);
-        }
-
-        resolve(stats);
-      });
     });
   }
 
