@@ -1,7 +1,14 @@
-import config from './config/config.json';
-import {User, Product} from './models';
+import DirWatcher from './modules/dirwatcher';
+import Importer from './modules/importer';
 
-const user = new User();
-const product = new Product();
+const path = './data/';
 
-console.log(config.name);
+const dirWatcher = new DirWatcher();
+dirWatcher.watch('./data/', 2000);
+const dwEventEmitter = dirWatcher.getEventEmitter();
+
+const importer = new Importer();
+/* async */
+importer.listen(dwEventEmitter, './data/');
+/* sync */
+//importer.listen(dwEventEmitter, './data/', true);
