@@ -1,14 +1,15 @@
-import DirWatcher from './modules/dirwatcher';
-import Importer from './modules/importer';
+import express from 'express';
+import parseCookies from './middlewares/parse-cookies.js';
+import parseQuery from './middlewares/parse-query.js';
+import router from './routes/index.js';
 
-const path = './data/';
+const app = express();
 
-const dirWatcher = new DirWatcher();
-dirWatcher.watch('./data/', 2000);
-const dwEventEmitter = dirWatcher.getEventEmitter();
+app.use(parseCookies);
+app.use(parseQuery);
 
-const importer = new Importer();
-/* async */
-importer.listen(dwEventEmitter, './data/');
-/* sync */
-//importer.listen(dwEventEmitter, './data/', true);
+app.use('/api', router);
+
+app.get('*', (req, res) => res.send('Other pages'));
+
+export default app;
