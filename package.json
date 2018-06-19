@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir dist --copy-files",
     "prestart": "rimraf dist && npm run build",
-    "start": "node dist/app.js",
+    "start": "node dist/index.js",
     "watch": "nodemon --exec babel-node src/app.js"
   },
   "repository": {
@@ -30,8 +30,12 @@
     "babel-register": "^6.26.0",
     "commander": "^2.15.1",
     "csvtojson": "^2.0.0",
+    "express": "^4.16.3",
     "minimist": "^1.2.0",
     "nodemon": "^1.17.3",
     "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.3"
   }
 }
