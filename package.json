@@ -34,6 +34,7 @@
     "express": "^4.16.3",
     "jsonwebtoken": "^8.3.0",
     "minimist": "^1.2.0",
+    "mongoose": "^5.1.7",
     "nodemon": "^1.17.3",
     "passport": "^0.4.0",
     "pg": "^7.4.3",
@@ -42,6 +43,7 @@
     "sequelize-cli": "^4.0.0"
   },
   "dependencies": {
-    "cookie-parser": "^1.4.3"
+    "cookie-parser": "^1.4.3",
+    "mongodb": "^3.1.0"
   }
 }
