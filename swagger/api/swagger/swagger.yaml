@@ -1,0 +1,223 @@
+swagger: "2.0"
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:10010
+basePath: /
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+schemes:
+  - http
+  - https
+paths:
+  /api/products:
+    get:
+      tags:
+      - developers
+      summary: searches products
+      description: |
+        By passing in the appropriate options, you can search for
+        products
+      operationId: searchProducts
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: '#/definitions/Product'
+    post:
+      tags:
+      - developers
+      summary: adds product item
+      description: Adds product
+      operationId: addProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: inventoryItem
+        description: Inventory item to add
+        required: false
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+    put:
+      tags:
+      - developers
+      summary: update product item
+      description: Update product
+      operationId: updateProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: inventoryItem
+        description: Inventory item to update
+        required: false
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: item updated
+        400:
+          description: invalid input, object invalid
+    delete:
+      tags:
+      - developers
+      summary: delete product item
+      description: Delete product
+      operationId: deleteProduct
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        description: id for item, that will be deleted
+        required: false
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: item updated
+        400:
+          description: invalid input, object invalid
+  /api/user:
+    get:
+      tags:
+      - developers
+      summary: searches user
+      description: |
+        By passing in the appropriate options, you can search for
+        user
+      operationId: searchUser
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: '#/definitions/User'
+    post:
+      tags:
+      - developers
+      summary: adds user
+      description: Adds user
+      operationId: addUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: inventoryItem
+        description: Inventory item to add
+        required: false
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+    put:
+      tags:
+      - developers
+      summary: update user
+      description: Update user
+      operationId: updateUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: inventoryItem
+        description: Inventory item to update
+        required: false
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: item updated
+        400:
+          description: invalid input, object invalid
+    delete:
+      tags:
+      - developers
+      summary: delete user
+      description: Delete user
+      operationId: deleteUser
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: id
+        description: id for item, that will be deleted
+        required: false
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          description: item updated
+        400:
+          description: invalid input, object invalid
+definitions:
+  User:
+    type: object
+    required:
+    - login
+    - password
+    properties:
+      login:
+        type: string
+        example: Test
+      password:
+        type: string
+        example: admin123
+    example:
+      password: admin123
+      login: Test
+  Product:
+    type: object
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        example: Monitor
+      Price:
+        type: integer
+        example: 1220
+    example:
+      Price: 1220
+      name: Monitor
