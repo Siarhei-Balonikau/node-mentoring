@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+import User from './../models/user.js';
 
 exports.authUser = (req, res) => {
     const login = req.body.login;
@@ -20,4 +22,15 @@ exports.authUser = (req, res) => {
     }
 
     res.send(json);
+};
+
+exports.getUser = function(req, res, next) {
+  User.find({}, '', function(err, blogs) {
+    if (err) {
+      res.status(500);
+      res.render('error', { title: 'Error', message: 'Can not get all blogs' });
+    }
+
+    res.render('blogs', { title: 'All blogs', message: 'All blogs', blogs: blogs });
+  });
 };

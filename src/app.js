@@ -5,19 +5,11 @@ import authCheck from './middlewares/auth-check.js';
 import router from './routes/index.js';
 import routerAuth from './routes/auth.js';
 import bodyParser from 'body-parser';
-import Sequelize from 'sequelize';
+import mongoose from 'mongoose';
+import productModel from './models/product.js';
+import userModel from './models/user.js';
 
-const sequelize = new Sequelize('postgres', 'postgres', 'admin', {
-  host: 'localhost',
-  dialect: 'postgres',
-
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+mongoose.connect('mongodb://localhost/mongod');
 
 const app = express();
 
@@ -25,6 +17,24 @@ app.use(parseCookies);
 app.use(parseQuery);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+const mockUsers = [
+    { 'login' : 'test1', 'password' : 'zxc1' },
+    { 'login' : 'test2', 'password' : 'zxc2' }
+];
+
+const mockProducts = [
+    { 'name' : 'monitor', 'price' : 1000 },
+    { 'name' : 'mouse', 'price' : 10 }
+];
+
+userModel.insertMany(mockUsers, function(err,r) {
+
+})
+
+productModel.insertMany(mockProducts, function(err,r) {
+
+})
 
 app.use(authCheck);
 app.use('/api', router);
